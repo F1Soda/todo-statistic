@@ -4,7 +4,7 @@ const { readLine } = require('./console');
 const files = getFiles();
 
 console.log('Please, write your command!');
-const todos = getAllTodoComments()
+const todos = getAllTodoComments();
 readLine(processCommand);
 
 function getFiles() {
@@ -21,6 +21,21 @@ function processCommand(command) {
             }
         } else {
             console.log('Please specify a username');
+        }
+    } else if (command.startsWith('sort ')) {
+        const sortType = command.split(' ')[1];
+        switch (sortType) {
+            case 'importance':
+                sortByImportance().forEach(comment => console.log(comment));
+                break;
+            case 'user':
+                sortByUser().forEach(comment => console.log(comment));
+                break;
+            case 'date':
+                sortByDate().forEach(comment => console.log(comment));
+                break;
+            default:
+                console.log('Invalid sort type. Use: importance, user, or date.');
         }
     } else {
         switch (command) {
@@ -70,5 +85,35 @@ function getTodoCommentsByUser(username) {
     return todos.filter(comment => {
         const match = comment.match(/\/\/\s*TODO\s*([^;]+);/);
         return match && match[1].trim().toLowerCase() === username.toLowerCase();
+    });
+}
+
+
+function sortByImportance() {
+    return [...todos].sort((a, b) => {
+        const countA = (a.match(/!/g) || []).length;
+        const countB = (b.match(/!/g) || []).length;
+        return countB - countA;
+    });
+}
+
+function sortByUser() {
+    return [...todos].sort((a, b) => {
+        const userA = (a.match(/\/\/\s*TODO\s*([^;]+);/) || [])[1] || 'zzzz';
+        const userB = (b.match(/\/\/\s*TODO\s*([^;]+);/) || [])[1] || 'zzzz';
+        return userA.localeCompare(userB);
+    });
+}
+
+
+function sortByDate() {
+    return [...todos].sort((a, b) => {
+        const dateA = (a.match(/\/\/\s*TODO\s*[^;]+;\s*([^;]+);/) || [])[1];
+        const dateB = (b.match(/\/\/\s*TODO\s*[^;]+;\s*([^;]+);/) || [])[1];
+
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+
+        return new Date(dateB) - new Date(dateA);
     });
 }
