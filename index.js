@@ -9,7 +9,12 @@ readLine(processCommand);
 
 function getFiles() {
     const filePaths = getAllFilePathsWithExtension(process.cwd(), 'js');
-    return filePaths.map(path => readFile(path));
+    return filePaths.map(path => {
+        return {
+            fileName: path.split('/').pop(),
+            content: readFile(path)
+        };
+    });
 }
 
 function processCommand(command) {
@@ -62,14 +67,14 @@ function processCommand(command) {
 function getAllTodoComments() {
     const comments = [];
     for (const file of files) {
-        const lines = file.split('\n');
+        const lines = file.content.split('\n');
 
         for (let line of lines) {
             line = line.trim();
 
             const match = line.match(/\/\/\s*TODO:?\s*(.*)/i);
             if (match) {
-                comments.push(match[0]);
+                comments.push(match[0] + ' ' + file.fileName);
             }
         }
     }
