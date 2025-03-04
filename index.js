@@ -88,7 +88,7 @@ function getImportantTodoComments() {
 
 function getTodoCommentsByUser(username) {
     return todos.filter(comment => {
-        const match = comment.match(/\/\/\s*TODO\s*([^;]+);/);
+        const match = comment.match(/\/\/\s*TODO:?\s*([^;]+);/i);
         return match && match[1].trim().toLowerCase() === username.toLowerCase();
     });
 }
@@ -104,8 +104,8 @@ function sortByImportance() {
 
 function sortByUser() {
     return [...todos].sort((a, b) => {
-        const userA = (a.match(/\/\/\s*TODO\s*([^;]+);/) || [])[1] || 'zzzz';
-        const userB = (b.match(/\/\/\s*TODO\s*([^;]+);/) || [])[1] || 'zzzz';
+        const userA = (a.match(/\/\/\s*TODO:?\s*([^;]+);/) || [])[1] || 'zzzz';
+        const userB = (b.match(/\/\/\s*TODO:?\s*([^;]+);/) || [])[1] || 'zzzz';
         return userA.localeCompare(userB);
     });
 }
@@ -113,8 +113,8 @@ function sortByUser() {
 
 function sortByDate() {
     return [...todos].sort((a, b) => {
-        const dateA = (a.match(/\/\/\s*TODO\s*[^;]+;\s*([^;]+);/) || [])[1];
-        const dateB = (b.match(/\/\/\s*TODO\s*[^;]+;\s*([^;]+);/) || [])[1];
+        const dateA = (a.match(/\/\/\s*TODO:?\s*[^;]+;\s*([^;]+);/i) || [])[1];
+        const dateB = (b.match(/\/\/\s*TODO:?\s*[^;]+;\s*([^;]+);/i) || [])[1];
 
         if (!dateA) return 1;
         if (!dateB) return -1;
