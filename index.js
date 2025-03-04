@@ -104,8 +104,8 @@ function sortByImportance() {
 
 function sortByUser() {
     return [...todos].sort((a, b) => {
-        const userA = (a.match(/\/\/\s*TODO:?\s*([^;]+);/) || [])[1] || 'zzzz';
-        const userB = (b.match(/\/\/\s*TODO:?\s*([^;]+);/) || [])[1] || 'zzzz';
+        const userA = (a.match(/\/\/\s*TODO:?\s*([^;]+);/i) || [])[1] || 'zzzz';
+        const userB = (b.match(/\/\/\s*TODO:?\s*([^;]+);/is) || [])[1] || 'zzzz';
         return userA.localeCompare(userB);
     });
 }
