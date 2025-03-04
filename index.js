@@ -67,7 +67,7 @@ function getAllTodoComments() {
         for (let line of lines) {
             line = line.trim();
 
-            const match = line.match(/\/\/\s*TODO\s*(.*)/);
+            const match = line.match(/\/\/\s*TODO:?\s*(.*)/i);
             if (match) {
                 comments.push(match[0]);
             }
